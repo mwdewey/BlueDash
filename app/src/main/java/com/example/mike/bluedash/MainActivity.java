@@ -1,20 +1,14 @@
 package com.example.mike.bluedash;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -77,16 +71,18 @@ public class MainActivity extends ActionBarActivity {
 
         CircleComponent circle = new CircleComponent(mainContext,Math.round(1080/2),Math.round(1920/2),200,0,300,0,Color.GREEN);
         circle.setId(8000);
+        mainLayout.addView(circle);
+
 
         SeekBar seekBar2 = (SeekBar)findViewById(R.id.seekBar2);
         seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                CircleComponent bm = (CircleComponent)findViewById(8000);
-                if(bm != null) {
-                    bm.progress = progress;
-                    bm.invalidate();
+                CircleComponent dial = (CircleComponent)findViewById(8000);
+                if(dial != null) {
+                    dial.updateLine(progress);
+                    dial.invalidate();
                 }
             }
 

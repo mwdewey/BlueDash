@@ -19,6 +19,10 @@ public class CircleComponent extends View {
     int max;
     int progress;
 
+    final double lineStartAngle = (4.0 * Math.PI) / 3.0;
+    float lineX;
+    float lineY;
+
     Paint fillPaint;
     Paint outlinePaint;
     Paint textPaint;
@@ -31,6 +35,8 @@ public class CircleComponent extends View {
         this.radius = radius;
         this.progress = progress;
         this.color = color;
+        this.lineX = (float)(x + Math.cos(lineStartAngle) * (float)radius);
+        this.lineY = (float)(y - Math.sin(lineStartAngle) * (float)radius);
 
         fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         fillPaint.setColor(color);
@@ -51,7 +57,7 @@ public class CircleComponent extends View {
     @Override
     protected void onDraw(Canvas canvas){
         canvas.drawCircle(x, y, radius, fillPaint);
-
+        canvas.drawLine(x, y, lineX, lineY, outlinePaint);
     }
 
     @Override
@@ -60,6 +66,14 @@ public class CircleComponent extends View {
         int height = heightMeasureSpec;
 
         setMeasuredDimension(width, height);
+    }
+
+    public void updateLine(int progress) {
+        double percent = progress/100.0;
+        double angleChange = percent * ((5.0 * Math.PI) / 3.0);
+        double lineAngle = lineStartAngle - angleChange;
+        this.lineX = (float)(x + Math.cos(lineAngle) * (float)radius);
+        this.lineY = (float)(y - Math.sin(lineAngle) * (float)radius);
     }
 
 }
