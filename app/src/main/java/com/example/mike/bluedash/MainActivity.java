@@ -3,6 +3,8 @@ package com.example.mike.bluedash;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,8 @@ public class MainActivity extends ActionBarActivity {
 
         ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
         Context mainContext = getApplicationContext();
+
+        Handler mHandler = new Handler(Looper.getMainLooper());
 
         GuiComponent bm = new GuiComponent(mainContext,100,100,200,300,0,300,0,Color.GREEN);
         bm.setId(5000);
@@ -80,9 +84,9 @@ public class MainActivity extends ActionBarActivity {
         seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                CircleComponent dial = (CircleComponent)findViewById(8000);
-                if(dial != null) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                CircleComponent dial = (CircleComponent) findViewById(8000);
+                if (dial != null) {
                     dial.updateLine(progress);
                     dial.invalidate();
                 }
