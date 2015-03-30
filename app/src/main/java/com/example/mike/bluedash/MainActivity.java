@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -121,4 +122,16 @@ public class MainActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public static Handler _handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d("debug", String.format("Handler.handleMessage(): msg=%s", msg.getData().getString("data")));
+            // This is where main activity thread receives messages
+            // Put here your handling of incoming messages posted by other threads
+            super.handleMessage(msg);
+        }
+    };
+
+
 }

@@ -3,6 +3,9 @@ package com.example.mike.bluedash;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.IOException;
@@ -34,10 +37,15 @@ public class ConnectThread extends Thread {
 
     public void run() {
 
+        Message msg = Message.obtain();
+        Bundle bundle = new Bundle();
+        bundle.putString("data","HERRO I IS ASYNC.");
+        msg.setData(bundle);
+        MainActivity._handler.sendMessage(msg);
+
         try {
             // Connect the device through the socket. This will block
             // until it succeeds or throws an exception
-            Log.d("debug","Socket name: " + mmSocket.getRemoteDevice().getName());
             mmSocket.connect();
             Log.d("debug","Socked connected");
         } catch (IOException connectException) {
@@ -57,11 +65,15 @@ public class ConnectThread extends Thread {
         OutputStream outStream = null;
         try { outStream = mmSocket.getOutputStream(); } catch (IOException e) { }
 
-        String message = "Hello from Android.\n";
+        String message = "Sup from Android.\n";
         byte[] msgBuffer = message.getBytes();
         try { outStream.write(msgBuffer); } catch (IOException e) { }
 
+
     }
+
+
+
 
     /** Will cancel an in-progress connection, and close the socket */
     public void cancel() {
