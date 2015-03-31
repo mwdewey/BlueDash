@@ -3,12 +3,15 @@ package com.example.mike.bluedash;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -29,13 +32,25 @@ public class MainActivity extends ActionBarActivity {
         ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
         Context mainContext = getApplicationContext();
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
         Handler mHandler = new Handler(Looper.getMainLooper());
 
-        GuiComponent bm = new GuiComponent(mainContext,100,100,200,300,0,300,0,Color.GREEN);
+        int bmWidth = (int)(width * 0.185185);
+        int bmHeight = (int)(height * 0.168918);
+        int bmY = (int)(height * (100.0/1776.0));
+
+        int bm1X = (int)(width * (100.0/1080.0));
+        GuiComponent bm = new GuiComponent(mainContext,bm1X,bmY,bmWidth,bmHeight,0,300,0,Color.GREEN);
         bm.setId(5000);
-        GuiComponent bm2 = new GuiComponent(mainContext,400,100,200,300,0,300,0,Color.RED);
+        int bm2X = (int)(width * (400.0/1080.0));
+        GuiComponent bm2 = new GuiComponent(mainContext,bm2X,bmY,bmWidth,bmHeight,0,300,0,Color.RED);
         bm2.setId(6000);
-        GuiComponent bm3 = new GuiComponent(mainContext,700,100,200,300,0,300,0,Color.BLUE);
+        int bm3X = (int)(width * (700.0/1080.0));
+        GuiComponent bm3 = new GuiComponent(mainContext,bm3X,bmY,bmWidth,bmHeight,0,300,0,Color.BLUE);
         bm3.setId(7000);
 
         mainLayout.addView(bm);
@@ -76,7 +91,10 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        CircleComponent circle = new CircleComponent(mainContext,Math.round(1080/2),Math.round(1920/2),200,0,300,0,Color.GREEN);
+        int circX = (int)((double)width*0.925);
+        int circY = height;
+        int radius = (int)(width * (200.0/1080.0));
+        CircleComponent circle = new CircleComponent(mainContext,Math.round(circX/2),Math.round(circY/2),radius,0,300,0,Color.GREEN);
         circle.setId(8000);
         mainLayout.addView(circle);
 
