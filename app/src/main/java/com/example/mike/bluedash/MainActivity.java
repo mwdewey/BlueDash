@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,17 +16,20 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends ActionBarActivity {
-
-    void onProgressChanged (SeekBar seekBar, int progress, boolean fromUser){
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String address = getIntent().getStringExtra("address");
+        if(address == null) return;
+        else connect(address);
 
         ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
         Context mainContext = getApplicationContext();
@@ -141,15 +143,10 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public static Handler _handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d("debug", String.format("Handler.handleMessage(): msg=%s", msg.getData().getString("data")));
-            // This is where main activity thread receives messages
-            // Put here your handling of incoming messages posted by other threads
-            super.handleMessage(msg);
-        }
-    };
+    private void connect(String address){
+        AsyncUpdate au = new AsyncUpdate(this,address);
+        au.execute("");
+    }
 
 
 }

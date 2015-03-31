@@ -9,25 +9,18 @@ import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 
-public class ConnectActivity  extends ActionBarActivity{
+public class ConnectActivity extends ActionBarActivity{
 
     BroadcastReceiver mReceiver;
     List<String> bList;
@@ -36,7 +29,7 @@ public class ConnectActivity  extends ActionBarActivity{
     BluetoothAdapter mBluetoothAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
@@ -61,13 +54,12 @@ public class ConnectActivity  extends ActionBarActivity{
         bluetoothList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //BluetoothDevice b = bDeviceList.get(position);
+                BluetoothDevice b = bDeviceList.get(position);
+                Log.d("debug","Picked: " + b.getName());
 
-                BluetoothDevice b = mBluetoothAdapter.getRemoteDevice("24:FD:52:8D:56:A5");
-                Log.d("debug","Connecting " + b.getName());
-                ConnectThread connectThread = new ConnectThread(b);
-
-                connectThread.start();
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                i.putExtra("address",b.getAddress());
+                startActivity(i);
 
             }
         });
@@ -82,7 +74,7 @@ public class ConnectActivity  extends ActionBarActivity{
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
         mBluetoothAdapter.cancelDiscovery();
