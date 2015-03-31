@@ -24,6 +24,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String address = getIntent().getStringExtra("address");
+        if(address == null) return;
+        else connect(address);
+
         ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
         Context mainContext = getApplicationContext();
 
@@ -121,29 +125,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void processData(){
-        String raw = BluetoothDataHolder.getInstance().getData();
-        if(raw.equals("")) return;
-
-        JSONObject jObject = null;
-        try {
-            jObject = new JSONObject(raw);
-        }
-        catch (JSONException e){ Log.d("error","Error parsing JSON from server"); return; }
-
-        int packetNum;
-        try {
-            packetNum = jObject.getInt("num");
-        }
-        catch (JSONException e){ Log.d("error","Error no packet number found"); return; }
-
-        Log.d("debug",String.valueOf(packetNum));
-        CircleComponent dial = (CircleComponent) findViewById(8000);
-        if (dial != null) {
-            dial.updateLine(packetNum*10);
-            dial.invalidate();
-        }
-
+    private void connect(String address){
+        AsyncUpdate au = new AsyncUpdate(this,address);
+        au.execute("");
     }
 
 
