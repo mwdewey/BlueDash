@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  * Created by Mike on 3/28/2015.
  */
 public class ConnectThread extends Thread {
-    private final BluetoothSocket mmSocket;
+    private BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
@@ -37,37 +38,56 @@ public class ConnectThread extends Thread {
 
     public void run() {
 
-        Message msg = Message.obtain();
-        Bundle bundle = new Bundle();
-        bundle.putString("data","HERRO I IS ASYNC.");
-        msg.setData(bundle);
-        MainActivity._handler.sendMessage(msg);
-
-        try {
-            // Connect the device through the socket. This will block
-            // until it succeeds or throws an exception
-            mmSocket.connect();
-            Log.d("debug","Socked connected");
-        } catch (IOException connectException) {
-            // Unable to connect; close the socket and get out
+        boolean connected = false;
+        int attempts = 1;
+        while(!connected && attempts < 2) {
             try {
-                mmSocket.close();
-                Log.d("debug",connectException.getMessage());
-                connectException.printStackTrace();
-            } catch (IOException closeException) { Log.d("debug","Socked error"); }
-            return;
+                // Connect the device through the socket. This will block
+                // until it succeeds or throws an exception
+                mmSocket = (BluetoothSocket) mmDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(mmDevice,attempts);
+                mmSocket.connect();
+                Log.d("debug", "Socket connected, port:" + attempts);
+                connected = true;
+            } catch (Exception e) {
+                // Unable to connect; close the socket and get out
+                Log.d("debug", "Socket failed to connect, port:" + attempts);
+                e.printStackTrace();
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) {
+                    Log.d("debug", "Socked error failed to close, port:" + attempts);
+                }
+            }
+            attempts++;
         }
 
         // Do work to manage the connection (in a separate thread)
         //BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
         //ConnectedThread connectedThread = new ConnectedThread(mmSocket);
         //connectedThread.start();
-        OutputStream outStream = null;
-        try { outStream = mmSocket.getOutputStream(); } catch (IOException e) { }
+        InputStream inStream = null;
+        try { inStream = mmSocket.getInputStream(); } catch (IOException e) { }
 
-        String message = "Sup from Android.\n";
-        byte[] msgBuffer = message.getBytes();
-        try { outStream.write(msgBuffer); } catch (IOException e) { }
+        while (true) {
+            try {
+                // Read from the InputStream
+                StringBuilder sb = new StringBuilder();
+                int i;
+                while (0 <= (i = inStream.read())) {
+                    if (i == '\n') {
+                        break;
+                    } else sb.append((char)i);
+                }
+
+                // Send the obtained bytes to the UI activity
+                BluetoothDataHolder.getInstance().addData(sb.toString());
+
+
+                Log.d("debug",String.valueOf(sb.toString()));
+            } catch (IOException e) {
+                break;
+            }
+        }
 
 
     }

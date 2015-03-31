@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +13,11 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends ActionBarActivity {
-
-    void onProgressChanged (SeekBar seekBar, int progress, boolean fromUser){
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,15 +121,30 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public static Handler _handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d("debug", String.format("Handler.handleMessage(): msg=%s", msg.getData().getString("data")));
-            // This is where main activity thread receives messages
-            // Put here your handling of incoming messages posted by other threads
-            super.handleMessage(msg);
+    private void processData(){
+        String raw = BluetoothDataHolder.getInstance().getData();
+        if(raw.equals("")) return;
+
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(raw);
         }
-    };
+        catch (JSONException e){ Log.d("error","Error parsing JSON from server"); return; }
+
+        int packetNum;
+        try {
+            packetNum = jObject.getInt("num");
+        }
+        catch (JSONException e){ Log.d("error","Error no packet number found"); return; }
+
+        Log.d("debug",String.valueOf(packetNum));
+        CircleComponent dial = (CircleComponent) findViewById(8000);
+        if (dial != null) {
+            dial.updateLine(packetNum*10);
+            dial.invalidate();
+        }
+
+    }
 
 
 }
