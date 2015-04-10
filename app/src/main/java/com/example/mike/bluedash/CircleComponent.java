@@ -58,6 +58,20 @@ public class CircleComponent extends View {
     protected void onDraw(Canvas canvas){
         canvas.drawCircle(x, y, radius, fillPaint);
         canvas.drawLine(x, y, lineX, lineY, outlinePaint);
+
+        //these values are used to draw the dashed line
+        int numDashes = 10; // will actually be one more than the number here
+
+        for (int i = 0; i <= numDashes; i++) {
+            double percent = (double)i/(double)numDashes;
+            double angleChange = percent * ((5.0 * Math.PI) / 3.0);
+            double lineAngle = lineStartAngle - angleChange;
+            float innerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(0.9));
+            float innerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(0.9));
+            float outerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(1.1));
+            float outerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(1.1));
+            canvas.drawLine(innerDashX, innerDashY, outerDashX, outerDashY, outlinePaint);
+        }
     }
 
     @Override
