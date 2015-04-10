@@ -44,7 +44,7 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         bluetoothLine = "";
         packetNum = -1;
 
-        dial = (CircleComponent) main.findViewById(8000);
+        dial = (CircleComponent) this.main.findViewById(8000);
     }
 
     @Override
@@ -64,7 +64,6 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
                 }
 
                 bluetoothLine = sb.toString();
-                Log.d("debug",String.valueOf(sb.toString()));
 
                 packetNum = parse(bluetoothLine);
 
@@ -89,12 +88,17 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onProgressUpdate(Void... values) {
+        CircleComponent dial = (CircleComponent) main.findViewById(8000);
         if (dial != null) {
-            dial.updateLine(packetNum);
+            Log.d("onProgressUpdate","Number: " + getNum());
+            dial.updateLine(getNum());
             dial.invalidate();
         }
 
     }
+
+    public int getNum(){return packetNum;}
+    public CircleComponent getDial(){return dial;}
 
     private boolean connect(){
         boolean connected = false;
@@ -146,8 +150,6 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
             packetNum = jObject.getInt("num");
         }
         catch (JSONException e){ Log.d("error","Error no packet number found"); return -1; }
-
-        Log.d("debug",String.valueOf(packetNum));
 
         return packetNum;
     }
