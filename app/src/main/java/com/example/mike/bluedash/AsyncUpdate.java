@@ -98,7 +98,7 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
     }
 
     public int getNum(){return packetNum;}
-    public CircleComponent getDial(){return dial;}
+    public CircleComponent getDial(){return dial;}//
 
     private boolean connect(){
         boolean connected = false;
