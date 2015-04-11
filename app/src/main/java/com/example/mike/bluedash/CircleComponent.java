@@ -26,6 +26,7 @@ public class CircleComponent extends View {
     Paint fillPaint;
     Paint outlinePaint;
     Paint textPaint;
+    Paint backgroundPaint;
 
     public CircleComponent(Context context, int x, int y, int radius,int min, int max, int progress, int color){
         super(context);
@@ -43,6 +44,12 @@ public class CircleComponent extends View {
         fillPaint.setStrokeWidth(0);
         fillPaint.setStyle(Paint.Style.FILL);
 
+        backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        int tempColor = Color.rgb(Color.red(color)/2,Color.green(color)/2,Color.blue(color)/2);
+        backgroundPaint.setColor(tempColor);
+        backgroundPaint.setStrokeWidth(0);
+        backgroundPaint.setStyle(Paint.Style.FILL);
+
         outlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         outlinePaint.setColor(Color.BLACK);
         outlinePaint.setStrokeWidth(5);
@@ -59,6 +66,7 @@ public class CircleComponent extends View {
         canvas.drawCircle(x, y, radius, fillPaint);
         canvas.drawLine(x, y, lineX, lineY, outlinePaint);
 
+
         //these values are used to draw the dashed line
         int numDashes = 10; // will actually be one more than the number here
 
@@ -71,6 +79,10 @@ public class CircleComponent extends View {
             float outerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(1.0));
             float outerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(1.0));
             canvas.drawLine(innerDashX, innerDashY, outerDashX, outerDashY, outlinePaint);
+
+            float textX = (float)(x + Math.cos(lineAngle) * (float)radius*(0.7)) - 40;
+            float textY = (float)(y - Math.sin(lineAngle) * (float)radius*(0.7));
+            canvas.drawText("" + (((double)100/numDashes)*i),textX,textY,textPaint);
         }
     }
 

@@ -37,6 +37,7 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
     View component;
     HashMap viewCache;
+    List<HashMap<Integer,Integer>> queue;
 
     public AsyncUpdate(ActionBarActivity main, String address){
         super();
@@ -51,7 +52,8 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         bluetoothLine = "";
         packetNum = -1;
 
-        viewCache = new HashMap<Integer, View>();
+        viewCache = new HashMap<Integer, Integer>();
+        queue = new ArrayList<>();
     }
 
     public View getComponent(){
@@ -78,7 +80,9 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
                 packetNum = parse(bluetoothLine);
 
-                publishProgress();
+                while(!queue.isEmpty()) {
+                    publishProgress();
+                }
 
             } catch (IOException e) {
                 break;
@@ -101,28 +105,35 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         return viewCache;
     }
 
+    public List<HashMap<Integer,Integer>> getQueue(){return this.queue;}
+
     @Override
     protected void onProgressUpdate(Void... values) {
-//        View component = getComponent();
-        component = main.findViewById(id);
+
+        if(getQueue().isEmpty()) return;
+        HashMap map = getQueue().get(0);
+        getQueue().remove(0);
+        int key = (Integer) map.keySet().toArray()[0];
+        int id = key;
+        int value = (Integer) map.get(key);
+
         if (viewCache.containsKey(id)) {
             component = (View)viewCache.get(id);
-            Log.d("Cache test", component.getClass().getSimpleName());
         } else {
             getViewCache().put(id, main.findViewById(id));
+            component = main.findViewById(id);
         }
         View tempComponent = null;
 
-//        Log.d("Progress update", component.getClass().getSimpleName());
         switch(component.getClass().getSimpleName()){
             case CIRCLE_COMPONENT_NAME:
                 tempComponent = component;
-                ((CircleComponent)tempComponent).updateLine(getNum());
+                ((CircleComponent)tempComponent).updateLine(value);
                 tempComponent.invalidate();
                 break;
             case BAR_COMPONENT_NAME:
                 tempComponent = component;
-                ((GuiComponent)tempComponent).progress = getNum();
+                ((GuiComponent)tempComponent).progress = value;
                 tempComponent.invalidate();
                 break;
             default: break;
@@ -185,6 +196,10 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         try {
             id = jObject.getInt("id");
             packetNum = jObject.getInt("num");
+
+            HashMap<Integer,Integer> temp = new HashMap<>();
+            temp.put(id,packetNum);
+            queue.add(temp);
         }
         catch (JSONException e){ Log.d("error","Error no packet number found"); return -1; }
 

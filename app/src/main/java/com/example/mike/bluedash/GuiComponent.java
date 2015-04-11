@@ -23,6 +23,7 @@ public class GuiComponent extends View {
     Paint fillPaint;
     Paint outlinePaint;
     Paint textPaint;
+    Paint backgroundPaint;
 
     GuiComponent(Context context,int x, int y, int width, int height,int min, int max, int progress, int color){
         super(context);
@@ -41,6 +42,12 @@ public class GuiComponent extends View {
         fillPaint.setStrokeWidth(0);
         fillPaint.setStyle(Paint.Style.FILL);
 
+        backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        int tempColor = Color.rgb(Color.red(color)/2,Color.green(color)/2,Color.blue(color)/2);
+        backgroundPaint.setColor(tempColor);
+        backgroundPaint.setStrokeWidth(0);
+        backgroundPaint.setStyle(Paint.Style.FILL);
+
         outlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         outlinePaint.setColor(Color.BLACK);
         outlinePaint.setStrokeWidth(5);
@@ -55,6 +62,7 @@ public class GuiComponent extends View {
 
     @Override
     protected void onDraw(Canvas canvas){
+        canvas.drawRect(x, y, x+width, y+height, backgroundPaint);
         canvas.drawRect(x, y-((float)progress/(max-min))*(height)+height, x+width, y+height, fillPaint);
 
         fillPaint.setColor(color);
