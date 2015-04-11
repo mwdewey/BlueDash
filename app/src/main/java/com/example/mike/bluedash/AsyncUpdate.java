@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +14,15 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
+    final String CIRCLE_COMPONENT_NAME = "CircleComponent";
+    final String BAR_COMPONENT_NAME = "GuiComponent";
+
+    private int id;
     private ActionBarActivity main;
     private String address;
     private boolean isConnected;
@@ -29,7 +35,8 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
     private int packetNum;
 
-    private CircleComponent dial;
+    View component;
+    HashMap viewCache;
 
     public AsyncUpdate(ActionBarActivity main, String address){
         super();
@@ -44,7 +51,11 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         bluetoothLine = "";
         packetNum = -1;
 
-        dial = (CircleComponent) this.main.findViewById(8000);
+        viewCache = new HashMap<Integer, View>();
+    }
+
+    public View getComponent(){
+        return this.component;
     }
 
     @Override
@@ -86,19 +97,44 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
     @Override
     protected void onPreExecute() {}
 
+    public HashMap<Integer, View> getViewCache() {
+        return viewCache;
+    }
+
     @Override
     protected void onProgressUpdate(Void... values) {
-        CircleComponent dial = (CircleComponent) main.findViewById(8000);
-        if (dial != null) {
-            Log.d("onProgressUpdate","Number: " + getNum());
-            dial.updateLine(getNum());
-            dial.invalidate();
+//        View component = getComponent();
+        component = main.findViewById(id);
+        if (viewCache.containsKey(id)) {
+            component = (View)viewCache.get(id);
+            Log.d("Cache test", component.getClass().getSimpleName());
+        } else {
+            getViewCache().put(id, main.findViewById(id));
         }
+        View tempComponent = null;
+
+//        Log.d("Progress update", component.getClass().getSimpleName());
+        switch(component.getClass().getSimpleName()){
+            case CIRCLE_COMPONENT_NAME:
+                tempComponent = component;
+                ((CircleComponent)tempComponent).updateLine(getNum());
+                tempComponent.invalidate();
+                break;
+            case BAR_COMPONENT_NAME:
+                tempComponent = component;
+                ((GuiComponent)tempComponent).progress = getNum();
+                tempComponent.invalidate();
+                break;
+            default: break;
+        }
+
+//        if (component != null) {
+//            Log.d("onProgressUpdate","Number: " + getNum());
+//        }
 
     }
 
     public int getNum(){return packetNum;}
-    public CircleComponent getDial(){return dial;}//
 
     private boolean connect(){
         boolean connected = false;
@@ -147,6 +183,7 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
 
         int packetNum;
         try {
+            id = jObject.getInt("id");
             packetNum = jObject.getInt("num");
         }
         catch (JSONException e){ Log.d("error","Error no packet number found"); return -1; }

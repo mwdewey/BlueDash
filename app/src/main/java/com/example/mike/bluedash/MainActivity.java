@@ -41,23 +41,25 @@ public class MainActivity extends ActionBarActivity {
 
         Handler mHandler = new Handler(Looper.getMainLooper());
 
-        int bmWidth = (int)(width * 0.185185);
-        int bmHeight = (int)(height * 0.168918);
+        int bmWidth = (int)(height * 0.185185);
+        int bmHeight = (int)(width * 0.168918);
         int bmY = (int)(height * (100.0/1776.0));
+        int bmX = (int)(width * (400.0/1080.0));
 
-        int bm1X = (int)(width * (100.0/1080.0));
-        GuiComponent bm = new GuiComponent(mainContext,bm1X,bmY,bmWidth,bmHeight,0,300,0,Color.GREEN);
-        bm.setId(5000);
-        int bm2X = (int)(width * (400.0/1080.0));
-        GuiComponent bm2 = new GuiComponent(mainContext,bm2X,bmY,bmWidth,bmHeight,0,300,0,Color.RED);
-        bm2.setId(6000);
-        int bm3X = (int)(width * (700.0/1080.0));
-        GuiComponent bm3 = new GuiComponent(mainContext,bm3X,bmY,bmWidth,bmHeight,0,300,0,Color.BLUE);
-        bm3.setId(7000);
+
+        GuiComponent bm = new GuiComponent(mainContext,bmX-30,bmY-20,bmWidth,bmHeight,0,300,0,Color.GREEN);
+        bm.setId(4000);
+        GuiComponent bm2 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY-20,bmWidth,bmHeight,0,300,0,Color.RED);
+        bm2.setId(5000);
+        GuiComponent bm3 = new GuiComponent(mainContext,bmX-30,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.BLUE);
+        bm3.setId(6000);
+        GuiComponent bm4 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.YELLOW);
+        bm4.setId(7000);
 
         mainLayout.addView(bm);
         mainLayout.addView(bm2);
         mainLayout.addView(bm3);
+        mainLayout.addView(bm4);
 
         SeekBar seekBar = (SeekBar)findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -93,12 +95,17 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        int circX = (int)((double)width*0.925);
-        int circY = height;
-        int radius = (int)(width * (200.0/1080.0));
-        CircleComponent circle = new CircleComponent(mainContext,Math.round(circX/2),Math.round(circY/2),radius,0,300,0,Color.GREEN);
+        int circX = (int)((double)width * 0.17);
+        int circY = (int)(height*0.33 + 20);
+        int radius = (int)(height * 0.28);
+        CircleComponent circle = new CircleComponent(mainContext, circX,circY,radius,0,300,0,Color.GREEN);
+
+        CircleComponent circle2 = new CircleComponent(mainContext, width - circX - 80, circY, radius, 0, 300, 0, Color.GREEN);
+
         circle.setId(8000);
         mainLayout.addView(circle);
+        circle2.setId(9000);
+        mainLayout.addView(circle2);
 
 
         SeekBar seekBar2 = (SeekBar)findViewById(R.id.seekBar2);

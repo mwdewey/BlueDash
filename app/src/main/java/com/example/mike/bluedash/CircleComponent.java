@@ -68,8 +68,8 @@ public class CircleComponent extends View {
             double lineAngle = lineStartAngle - angleChange;
             float innerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(0.9));
             float innerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(0.9));
-            float outerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(1.1));
-            float outerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(1.1));
+            float outerDashX = (float)(x + Math.cos(lineAngle) * (float)radius*(1.0));
+            float outerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(1.0));
             canvas.drawLine(innerDashX, innerDashY, outerDashX, outerDashY, outlinePaint);
         }
     }
