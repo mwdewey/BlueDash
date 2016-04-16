@@ -4,11 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 
-/**
- * Created by Mikes Gaming on 3/10/2015.
- */
 public class CircleComponent extends View {
     int x;
     int y;
@@ -27,6 +25,7 @@ public class CircleComponent extends View {
     Paint outlinePaint;
     Paint textPaint;
     Paint backgroundPaint;
+    Paint strokePaint;
 
     public CircleComponent(Context context, int x, int y, int radius,int min, int max, int progress, int color){
         super(context);
@@ -56,9 +55,17 @@ public class CircleComponent extends View {
         outlinePaint.setStyle(Paint.Style.STROKE);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.WHITE);
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(80);
+        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        strokePaint.setColor(Color.BLACK);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setTextSize(80);
+        strokePaint.setStrokeWidth(4);
+        strokePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
     }
 
     @Override
@@ -80,9 +87,11 @@ public class CircleComponent extends View {
             float outerDashY = (float)(y - Math.sin(lineAngle) * (float)radius*(1.0));
             canvas.drawLine(innerDashX, innerDashY, outerDashX, outerDashY, outlinePaint);
 
-            float textX = (float)(x + Math.cos(lineAngle) * (float)radius*(0.7)) - 40;
-            float textY = (float)(y - Math.sin(lineAngle) * (float)radius*(0.7));
-            canvas.drawText("" + (((double)100/numDashes)*i),textX,textY,textPaint);
+            float textX = (float)(x + Math.cos(lineAngle) * (float)radius*(0.7) - 40);
+            float textY = (float)(y - Math.sin(lineAngle) * (float)radius*(0.7) + 20);
+
+            canvas.drawText("" + ((int)((double)100/numDashes)*i),textX,textY,textPaint);
+            canvas.drawText("" + ((int)((double)100/numDashes)*i),textX,textY,strokePaint);
         }
     }
 

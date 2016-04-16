@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 
 /**
@@ -24,6 +25,7 @@ public class GuiComponent extends View {
     Paint outlinePaint;
     Paint textPaint;
     Paint backgroundPaint;
+    Paint strokePaint;
 
     GuiComponent(Context context,int x, int y, int width, int height,int min, int max, int progress, int color){
         super(context);
@@ -54,9 +56,17 @@ public class GuiComponent extends View {
         outlinePaint.setStyle(Paint.Style.STROKE);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.WHITE);
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(40);
+        textPaint.setTextSize(120);
+        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        strokePaint.setColor(Color.BLACK);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setTextSize(120);
+        strokePaint.setStrokeWidth(10);
+        strokePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
     }
 
@@ -73,6 +83,8 @@ public class GuiComponent extends View {
         String displayText = String.valueOf(progress);
         int textLength = Math.round(textPaint.measureText(displayText, 0, displayText.length()));
         canvas.drawText(displayText,(x*2+width-textLength)/2,(y*2+height)/2,textPaint);
+        canvas.drawText(displayText,(x*2+width-textLength)/2,(y*2+height)/2,strokePaint);
+
     }
 
     @Override

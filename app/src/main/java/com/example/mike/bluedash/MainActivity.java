@@ -7,14 +7,16 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import org.json.JSONException;
@@ -29,7 +31,11 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         String address = getIntent().getStringExtra("address");
-        if(address == null) return;
+        if(address == null){
+
+
+            return;
+        }
         else connect(address);
 
         ViewGroup mainLayout = (ViewGroup)findViewById(R.id.mainLayout);
@@ -48,13 +54,13 @@ public class MainActivity extends ActionBarActivity {
         int bmX = (int)(width * (400.0/1080.0));
 
 
-        GuiComponent bm = new GuiComponent(mainContext,bmX-30,bmY-20,bmWidth,bmHeight,0,300,0,Color.GREEN);
+        GuiComponent bm = new GuiComponent(mainContext,bmX-30,bmY-20,bmWidth,bmHeight,0,300,0,Color.rgb(76,175,80));
         bm.setId(4000);
-        GuiComponent bm2 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY-20,bmWidth,bmHeight,0,300,0,Color.RED);
+        GuiComponent bm2 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY-20,bmWidth,bmHeight,0,300,0,Color.rgb(244,67,54));
         bm2.setId(5000);
-        GuiComponent bm3 = new GuiComponent(mainContext,bmX-30,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.BLUE);
+        GuiComponent bm3 = new GuiComponent(mainContext,bmX-30,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.rgb(33,150,243));
         bm3.setId(6000);
-        GuiComponent bm4 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.YELLOW);
+        GuiComponent bm4 = new GuiComponent(mainContext,bmX+bmWidth+20,bmY+bmHeight+20,bmWidth,bmHeight,0,300,0,Color.rgb(255,235,59));
         bm4.setId(7000);
 
         mainLayout.addView(bm);
@@ -99,9 +105,9 @@ public class MainActivity extends ActionBarActivity {
         int circX = (int)((double)width * 0.17);
         int circY = (int)(height*0.33 + 20);
         int radius = (int)(height * 0.28);
-        CircleComponent circle = new CircleComponent(mainContext, circX,circY,radius,0,300,0,Color.GREEN);
+        CircleComponent circle = new CircleComponent(mainContext, circX,circY,radius,0,300,0,Color.rgb(158,158,158));
 
-        CircleComponent circle2 = new CircleComponent(mainContext, width - circX - 80, circY, radius, 0, 300, 0, Color.GREEN);
+        CircleComponent circle2 = new CircleComponent(mainContext, width - circX - 140, circY, radius, 0, 300, 0, Color.rgb(158,158,158));
 
         circle.setId(8000);
         mainLayout.addView(circle);

@@ -113,6 +113,7 @@ public class AsyncUpdate extends AsyncTask<String, Void, String> {
         if(getQueue().isEmpty()) return;
         HashMap map = getQueue().get(0);
         getQueue().remove(0);
+        if(map == null) return;
         int key = (Integer) map.keySet().toArray()[0];
         int id = key;
         int value = (Integer) map.get(key);
